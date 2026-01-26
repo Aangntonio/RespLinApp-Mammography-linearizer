@@ -39,6 +39,24 @@
   <img src="https://via.placeholder.com/800x400?text=Software+Screenshot+Placeholder" alt="Screenshot" width="800">
   <p><i>Main Interface of RespLin App</i></p>
 </div>
+## 🐾 Mascot
+
+```text
+       _                        
+       \`*-.                    
+        )  _`-.                 
+       .  : `. .                
+       : _   '  \               
+       ; *` _.   `*-._          
+       `-.-'          `-.       
+         ;       `       `.     
+         :.       .        \    
+         . \  .   :   .-'   .   
+         '  `+.;  ;  '      :   
+         :  '  |    ;       ;-. 
+         ; '   : :`-:     _.`* ;
+[bug] .*' /  .*' ; .*`- +'  `*' 
+      `*-* `*-* `*-*'
 
 ## 📥 Installation
 
