@@ -1,0 +1,8 @@
+# --- Ignorar carpetas de compilación (DONDE ESTÁ EL ARCHIVO PESADO) ---
+dist/
+build/
+*.spec
+
+# --- Ignorar archivos basura de Python ---
+__pycache__/
+*.pyc

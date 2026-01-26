@@ -146,7 +146,7 @@ class RespLinApp(wx.Frame):
         self.SetIcon(wx.Icon("icono.ico"))
 
 
-        # Ba
+        # Barra de arriba
         self.make_tool_bar()
 
         # El panel principal ahora ocupa toda la ventana
@@ -165,8 +165,8 @@ class RespLinApp(wx.Frame):
         ##iconos
         font_titulo = wx.Font(16, wx.FONTFAMILY_DECORATIVE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         font_instruccion = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
-        color_titulo = wx.Colour("#005A9C") # Un azul profesional
-        color_texto = wx.Colour("#333333") # Texto oscuro estándar
+        color_titulo = wx.Colour("#005A9C") # 
+        color_texto = wx.Colour("#333333") # 
 
         # 2. Creamos una StaticBox para enmarcar todo el mensaje
         welcome_box = wx.StaticBox(self.workspace_panel, label="Inicio Rápido")
@@ -237,7 +237,7 @@ class RespLinApp(wx.Frame):
 
         #####NOT TOCUH pleasseee}
         ###Cuando ella baila
-        ###Debajo esa mini falda
+        ###
 
         self.workspace_panel.SetSizer(self.ws_sizer)
         main_sizer.Add(self.workspace_panel, 1, wx.EXPAND | wx.ALL, 10)
@@ -278,6 +278,8 @@ class RespLinApp(wx.Frame):
         help_bmp = wx.ArtProvider.GetBitmap(wx.ART_HELP, wx.ART_TOOLBAR)
         exit_bmp = wx.ArtProvider.GetBitmap(wx.ART_QUIT, wx.ART_TOOLBAR)
         
+
+        #Botones de herramientoas
         self.tool_fr = toolbar.AddTool(wx.ID_ANY, "FR", fr_bmp, "Calcular la Función de Respuesta (FR)")
         self.tool_lin = toolbar.AddTool(wx.ID_ANY, "Linearizar", lin_bmp, "Linearizar un archivo DICOM")
         self.tool_save = toolbar.AddTool(wx.ID_ANY, "Guardar", save_bmp, "Guardar el DICOM linearizado")
@@ -315,6 +317,8 @@ class RespLinApp(wx.Frame):
         info.SetWebSite("https://github.com/Aangntonio/Linearizer-FunctionResponse-Mammography", "Repositorio de GitHub")
         wx.adv.AboutBox(info)
 
+    #Boton de atuda
+    variable_no_util = None
     def show_help(self, event):
         help_title = "Ayuda de RespLin App"
         help_message = (
@@ -336,13 +340,23 @@ class RespLinApp(wx.Frame):
         wx.MessageBox(help_message, help_title, wx.OK | wx.ICON_INFORMATION)
 
     def linearizar_dicoms(self, event):
+        '''
+        Docstring for linearizar_dicoms
+        
+        Esta funcion obteiene los parametreos de linearizacion del programa
+        en formato txt o mat
+        y lineariza un archivo DICOM
+        '''
         with wx.FileDialog(self, "Seleccionar archivo de parámetros (.mat o .txt)",
                            wildcard="Archivos de parámetros (*.mat;*.txt)|*.mat;*.txt",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as dlg:
             if dlg.ShowModal() == wx.ID_CANCEL: return
+            #Se obteiene la ruta del archivo
             file_path = dlg.GetPath()
             try:
+                #Carga de parametros
                 if file_path.endswith('.mat'):
+            
                     data = sio.loadmat(file_path)
                     A = float(data.get('parametros', [[0, 0]])[0][0])
                     B = float(data.get('parametros', [[0, 0]])[0][1])
@@ -365,11 +379,16 @@ class RespLinApp(wx.Frame):
             ds = dcm.dcmread(dcm_path)
             self.dicom = ds
             img = ds.pixel_array
+            ####Para realizar la conversión de las imgenes se tiene que normalizar contra el maximo valor
+            #depixel, para ello se obtiene el valor de pixel maixmo  como
+            #Pmax = exp((4095 - B)/A), si es una imagen de 12 bits y rescalar con 4095 que es 
+
             max_value = Conversion_exponencial(4095, B, A)
             convertion_factor = 4095 / max_value
             linear_img = Conversion_exponencial(img, B, A) * convertion_factor
             self.imagen_linear = linear_img
 
+            #Dibuja el DICOM
             self.ws_sizer.Clear(True)
             fig = Figure(figsize=(6, 4))
             fig.set_facecolor(COLOR_PANEL)
@@ -406,6 +425,12 @@ class RespLinApp(wx.Frame):
         FRWindow(self)
 
     def savedicom(self, event):
+        '''
+        Docstring for savedicom
+        
+        :param self: Description
+        :param event: Description
+        '''
         if self.imagen_linear is None:
             wx.MessageBox("No hay imagen DICOM linearizada para guardar.", "Error", wx.OK | wx.ICON_ERROR)
             return
@@ -430,6 +455,9 @@ class RespLinApp(wx.Frame):
             wx.MessageBox(f"No se pudo guardar el archivo DICOM:\n{e}", "Error", wx.OK | wx.ICON_ERROR)
 
     def show_histogram(self, event):
+        '''
+        Esata funcion calcula y muestra el histograma de la imagen linearizada
+        '''
         if self.imagen_linear is None:
             wx.MessageBox("Primero debes linearizar una imagen.", "Error", wx.OK | wx.ICON_ERROR)
             return
@@ -451,6 +479,11 @@ class RespLinApp(wx.Frame):
         hist_frame.Show()
 
     def enhance_image(self, event):
+        '''
+        Esta funcion mejora el contraste de la imagen linearizada,
+        para ello ajusta los limites de visualizacion al percentil 2 y 98
+        2% y 98%
+        '''
         if self.imagen_linear is None or self.img_artist_linear is None:
             wx.MessageBox("No hay una imagen linealizada para mejorar.", "Error", wx.OK | wx.ICON_ERROR)
             return
