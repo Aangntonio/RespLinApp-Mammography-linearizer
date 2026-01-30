@@ -49,27 +49,7 @@
 2.  Download the latest installer: `RespLin.App-2.0-win64.msi`.
 3.  Double-click the file and follow the setup wizard.
 4.  Launch the app from your desktop or start menu.
-
-### For Developers (Running from source)
-If you want to contribute or run the Python code directly:
-
-```bash
-# Clone the repository
-git clone [https://github.com/Aangntonio/RespLinApp-Mammography-linearizer.git](https://github.com/Aangntonio/RespLinApp-Mammography-linearizer.git)
-
-# Navigate to the directory
-cd RespLinApp-Mammography-linearizer
-
-# Install requirements
-pip install -r requirements.txt
-
-# Run the app
-python main.py
-
-
-
-<br><br>
-
+5.  
 ```text
   ,-.       _,---._ __  / \
  /  )    .-'       `./ /   \
